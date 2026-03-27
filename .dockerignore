@@ -1,0 +1,9 @@
+dist/
+*.exe
+.git/
+.github/
+.goreleaser.yml
+Makefile
+README.md
+LICENSE
+CHANGELOG.md
