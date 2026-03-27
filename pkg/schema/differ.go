@@ -11,6 +11,10 @@ func Diff(old, new *Schema) *DiffResult {
 	old = ResolveRefs(old)
 	new = ResolveRefs(new)
 
+	// Merge allOf compositions
+	old = MergeAllOf(old)
+	new = MergeAllOf(new)
+
 	var changes []Change
 	changes = diffSchemas(old, new, "", changes)
 	return NewDiffResult(changes)
