@@ -5,7 +5,7 @@
 ### Detect breaking schema changes before they ship
 
 [![Go](https://img.shields.io/badge/Go-1.26+-00ADD8?style=for-the-badge&logo=go&logoColor=white)](https://go.dev/)
-[![Tests](https://img.shields.io/badge/Tests-108+-success?style=for-the-badge)](https://github.com/JSLEEKR/schemadiff)
+[![Tests](https://img.shields.io/badge/Tests-270+-success?style=for-the-badge)](https://github.com/JSLEEKR/schemadiff)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
 [![SARIF](https://img.shields.io/badge/SARIF-2.1.0-orange?style=for-the-badge)](https://sarifweb.azurewebsites.net/)
 
