@@ -33,4 +33,5 @@ func init() {
 	rootCmd.AddCommand(checkCmd)
 	rootCmd.AddCommand(rulesCmd)
 	rootCmd.AddCommand(summaryCmd)
+	rootCmd.AddCommand(initCmd)
 }
