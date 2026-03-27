@@ -102,6 +102,11 @@ func outputResult(result *schema.DiffResult, filePath string) error {
 		if err := r.Report(result); err != nil {
 			return err
 		}
+	case "markdown", "md":
+		r := report.NewMarkdownReporter(os.Stdout)
+		if err := r.Report("Schema", result); err != nil {
+			return err
+		}
 	default:
 		r := report.NewTextReporter(os.Stdout, !noColor)
 		if err := r.Report("Schema", result); err != nil {
@@ -129,6 +134,11 @@ func outputMultipleResults(results map[string]*schema.DiffResult, filePath strin
 		}
 	case "sarif":
 		r := report.NewSARIFReporter(os.Stdout, filePath)
+		if err := r.ReportMultiple(results); err != nil {
+			return err
+		}
+	case "markdown", "md":
+		r := report.NewMarkdownReporter(os.Stdout)
 		if err := r.ReportMultiple(results); err != nil {
 			return err
 		}
