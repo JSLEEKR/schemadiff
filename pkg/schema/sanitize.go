@@ -60,13 +60,8 @@ func validatePath(path string) error {
 
 	// Check for suspicious patterns
 	if strings.Contains(clean, "..") {
-		// After cleaning, ".." indicates path traversal
-		abs, err := filepath.Abs(clean)
-		if err != nil {
-			return fmt.Errorf("invalid path: %w", err)
-		}
-		// Verify the resolved path is reasonable
-		_ = abs
+		// After cleaning, ".." still present means path traversal attempt
+		return fmt.Errorf("path contains traversal sequence: %s", path)
 	}
 
 	// Validate extension
