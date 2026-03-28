@@ -3,12 +3,23 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/JSLEEKR/schemadiff/pkg/openapi"
 	"github.com/JSLEEKR/schemadiff/pkg/report"
 	"github.com/JSLEEKR/schemadiff/pkg/schema"
 	"github.com/spf13/cobra"
 )
+
+// rejectTraversal checks that a cleaned path does not contain ".." segments.
+func rejectTraversal(path string) error {
+	clean := filepath.Clean(path)
+	if strings.Contains(clean, "..") {
+		return fmt.Errorf("path contains traversal sequence: %s", path)
+	}
+	return nil
+}
 
 var (
 	outputFormat string
@@ -42,6 +53,14 @@ func runCheck(cmd *cobra.Command, args []string) error {
 	oldPath := args[0]
 	newPath := args[1]
 
+	// Reject path traversal attempts
+	if err := rejectTraversal(oldPath); err != nil {
+		return err
+	}
+	if err := rejectTraversal(newPath); err != nil {
+		return err
+	}
+
 	// Detect format
 	format := inputFormat
 	if format == "auto" {
@@ -57,13 +76,13 @@ func runCheck(cmd *cobra.Command, args []string) error {
 }
 
 func runJSONSchemaCheck(oldPath, newPath string) error {
-	oldSchema, err := schema.ParseFile(oldPath)
+	oldSchema, err := schema.SafeParseFile(oldPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error parsing old schema: %v\n", err)
 		os.Exit(2)
 	}
 
-	newSchema, err := schema.ParseFile(newPath)
+	newSchema, err := schema.SafeParseFile(newPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error parsing new schema: %v\n", err)
 		os.Exit(2)

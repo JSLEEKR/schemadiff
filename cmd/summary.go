@@ -40,6 +40,14 @@ func runSummary(cmd *cobra.Command, args []string) error {
 	oldPath := args[0]
 	newPath := args[1]
 
+	// Reject path traversal attempts
+	if err := rejectTraversal(oldPath); err != nil {
+		return err
+	}
+	if err := rejectTraversal(newPath); err != nil {
+		return err
+	}
+
 	format := inputFormat
 	if format == "auto" {
 		format = detectFormat(oldPath)
@@ -65,12 +73,12 @@ func runSummary(cmd *cobra.Command, args []string) error {
 		}
 		result = schema.NewDiffResult(allChanges)
 	default:
-		oldSchema, err := schema.ParseFile(oldPath)
+		oldSchema, err := schema.SafeParseFile(oldPath)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(2)
 		}
-		newSchema, err := schema.ParseFile(newPath)
+		newSchema, err := schema.SafeParseFile(newPath)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 			os.Exit(2)
